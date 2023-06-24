@@ -1,25 +1,26 @@
+import { Motion } from "@capacitor/motion";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const [count, setCount] = useState(0);
-  const [key, setKey] = useState("");
+  const [motion, setMotion] = useState({ alpha: 0, gamma: 0, beta: 0 });
+
   useEffect(() => {
     if (typeof window.DeviceMotionEvent != "undefined") {
-      window.addEventListener("devicemotion", handleMotionEvent, true);
+      window.addEventListener(
+        "deviceorientation",
+        function (event: any) {
+          setMotion({
+            alpha: event.alpha,
+            gamma: event.gamma,
+            beta: event.beta,
+          });
+        },
+        true
+      );
     }
   }, []);
-
-  const handleMotionEvent = (event: any) => {
-    const x = event.accelerationIncludingGravity.x;
-    const y = event.accelerationIncludingGravity.y;
-    const z = event.accelerationIncludingGravity.z;
-
-    const key = `${x},${y},${z}`;
-
-    setKey(key);
-    setCount((prev) => prev + 1);
-  };
 
   return (
     <>
@@ -30,7 +31,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="h-[200vh]">
-        {count}: {key}
+        {count}::: {motion.alpha} ::: {motion.gamma} ::: {motion.beta}
       </main>
     </>
   );
