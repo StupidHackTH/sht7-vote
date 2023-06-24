@@ -39,7 +39,7 @@ const Team = () => {
       });
       setTeams(allTeam);
     });
-  }, []);
+  }, [db]);
 
   return (
     <div className="flex flex-col justify-center items-center my-8">
@@ -60,8 +60,8 @@ const Team = () => {
       </form>
 
       <div>
-        {teams.map((team: any) => (
-          <div>{team.name}</div>
+        {teams.map((team: any, index: number) => (
+          <div key={index}>{team.name}</div>
         ))}
       </div>
     </div>
