@@ -116,6 +116,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       session.tickets =
         token.tickets as AuthgartenOidcClaims["eventpopTickets"];
+      session.userId = token.sub;
       return session;
     },
   },
@@ -124,6 +125,7 @@ export const authOptions: NextAuthOptions = {
 declare module "next-auth" {
   interface Session {
     tickets: AuthgartenOidcClaims["eventpopTickets"];
+    userId: string | undefined;
   }
 }
 

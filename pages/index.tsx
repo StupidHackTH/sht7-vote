@@ -12,6 +12,10 @@ export default function Home() {
 
   const [motion, setMotion] = useState(0);
 
+  useEffect(() => {
+    console.log(session?.userId);
+  }, [session]);
+
   // useEffect(() => {
   //   DeviceMotionEvent.requestPermission().then((response: any) => {
   //     if (response == "granted") {
@@ -49,9 +53,8 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <main>
-          <Vote />
+          {session?.userId && <Vote userId={session?.userId} />}
           status: {status}
-          {motion}
         </main>
       </>
     );

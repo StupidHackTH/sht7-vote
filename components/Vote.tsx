@@ -1,14 +1,8 @@
 import { app } from "@/utils/firebase";
-import {
-  addDoc,
-  collection,
-  doc,
-  getFirestore,
-  onSnapshot,
-} from "firebase/firestore";
-import { use, useEffect, useState } from "react";
+import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
-const Vote = () => {
+const Vote = ({ userId }: { userId: string }) => {
   const db = getFirestore(app);
 
   const [currentTeam, setCurrentTeam] = useState<{
@@ -19,7 +13,7 @@ const Vote = () => {
     name: "",
   });
 
-  const [history, setHistory] = useState<any>({});
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     const unsub = onSnapshot(
@@ -41,42 +35,33 @@ const Vote = () => {
   }, [db]);
 
   useEffect(() => {
-    const history = localStorage.getItem("history");
-    if (history) {
-      setHistory(JSON.parse(history));
-    }
-  }, []);
+    if (count == 0) return;
 
-  useEffect(() => {
-    if (Object.keys(history).length === 0) return;
-    localStorage.setItem("history", JSON.stringify(history));
-
-    if (currentTeam.id === "end") {
-      addDoc(collection(db, "results"), history);
+    if (currentTeam.id !== "end") {
+      console.log(currentTeam.id, count);
+      setDoc(
+        doc(db, "results", userId),
+        {
+          [currentTeam.id]: count,
+        },
+        {
+          merge: true,
+        }
+      );
     }
-  }, [currentTeam.id, db, history]);
+  }, [currentTeam.id, db]);
+
+  const handleShake = () => {
+    if (currentTeam.id !== "end") {
+      setCount((prev) => prev + 1);
+    }
+  };
 
   return (
     <div>
       <div>Now you vote for : {currentTeam.name}</div>
-      <div>You clicked : {history[currentTeam.id]}</div>
-      <button
-        onClick={() => {
-          if (history[currentTeam.id]) {
-            setHistory({
-              ...history,
-              [currentTeam.id]: history[currentTeam.id] + 1,
-            });
-          } else {
-            setHistory({
-              ...history,
-              [currentTeam.id]: 1,
-            });
-          }
-        }}
-      >
-        Click me
-      </button>
+      <div>You clicked : {count}</div>
+      <button onClick={handleShake}>Click me</button>
     </div>
   );
 };
