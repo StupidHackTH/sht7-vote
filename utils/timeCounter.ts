@@ -1,5 +1,5 @@
 let currentSegment:
-  | { start: number; timer: ReturnType<typeof setTimeout> }
+  | { start: number; last: number; timer: ReturnType<typeof setTimeout> }
   | undefined;
 let totalTime = 0;
 
@@ -7,6 +7,7 @@ export function tickTime() {
   if (!currentSegment) {
     currentSegment = {
       start: performance.now(),
+      last: performance.now(),
       timer: setTimeout(() => {
         collectTime();
       }, 2000),
@@ -16,12 +17,27 @@ export function tickTime() {
     currentSegment.timer = setTimeout(() => {
       collectTime();
     }, 2000);
+    currentSegment.last = performance.now();
   }
+}
+
+export function peekTime() {
+  if (currentSegment) {
+    const time =
+      performance.now() -
+      currentSegment.start +
+      Math.min(performance.now() - currentSegment.last, 2000);
+    return totalTime + time;
+  }
+  return totalTime;
 }
 
 export function collectTime() {
   if (currentSegment) {
-    const time = performance.now() - currentSegment.start;
+    const time =
+      performance.now() -
+      currentSegment.start +
+      Math.min(performance.now() - currentSegment.last, 2000);
     totalTime += time;
     clearTimeout(currentSegment.timer);
     currentSegment = undefined;
