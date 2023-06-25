@@ -3,7 +3,6 @@ import { getMobileOperatingSystem } from "@/utils/getMobileOperatingSystem";
 import { collectTime, resetTime, tickTime } from "@/utils/timeCounter";
 import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
-import Shake from "shake.js";
 
 let shaking: { x: number; y: number; z: number } | undefined;
 
