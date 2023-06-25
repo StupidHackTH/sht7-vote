@@ -9,7 +9,6 @@ const Personal = ({ session }: { session: any }) => {
           src={session.user.image}
           alt=""
           className="rounded-lg object-cover"
-          fill={true}
         />
       </div>
       <div>
