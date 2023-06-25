@@ -16,13 +16,17 @@ export const getCurrentPitchingTeam = async () => {
   ).docs[0].data().name;
 };
 
-export const setCurrentPitchingTeam = async (teamName: string) => {
+export const setCurrentPitchingTeam = async (team: {
+  id: string;
+  name: string;
+}) => {
   const ref = doc(db, "current_pitching_team", "current_pitching_team");
 
   await setDoc(
     ref,
     {
-      name: teamName,
+      id: team.id,
+      name: team.name,
     },
     {
       merge: true,

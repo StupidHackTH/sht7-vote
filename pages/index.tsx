@@ -1,27 +1,8 @@
-import { Motion } from "@capacitor/motion";
+import Vote from "@/components/Vote";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [count, setCount] = useState(0);
-  const [motion, setMotion] = useState({ alpha: 0, gamma: 0, beta: 0 });
-
-  useEffect(() => {
-    if (typeof window.DeviceMotionEvent != "undefined") {
-      window.addEventListener(
-        "deviceorientation",
-        function (event: any) {
-          setMotion({
-            alpha: event.alpha,
-            gamma: event.gamma,
-            beta: event.beta,
-          });
-        },
-        true
-      );
-    }
-  }, []);
-
   return (
     <>
       <Head>
@@ -30,8 +11,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="h-[200vh]">
-        {count}::: {motion.alpha} ::: {motion.gamma} ::: {motion.beta}
+      <main>
+        <Vote />
       </main>
     </>
   );
