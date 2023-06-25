@@ -37,7 +37,7 @@ export default function Home() {
       motion2.y = motion1.y;
       motion2.z = motion1.y;
     }, 300);
-  });
+  }, []);
 
   const handleRequestMotion = async () => {
     if (typeof (DeviceMotionEvent as any).requestPermission === "function") {
