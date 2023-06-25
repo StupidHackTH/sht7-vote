@@ -3,6 +3,14 @@ import { getMobileOperatingSystem } from "@/utils/getMobileOperatingSystem";
 import { collectTime, resetTime, tickTime } from "@/utils/timeCounter";
 import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
+import Shake from "shake.js";
+
+let shaking: { x: number; y: number; z: number } | undefined;
+
+function normalize(x: number, y: number, z: number) {
+  const len = Math.hypot(x, y, z);
+  return [x / len, y / len, z / len];
+}
 
 const Vote = ({ userId }: { userId: string }) => {
   const [motion1, setMotion1] = useState({
@@ -20,23 +28,48 @@ const Vote = ({ userId }: { userId: string }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const change = Math.abs(
-      motion1.x -
-        motion2.current.x +
-        motion1.y -
-        motion2.current.x +
-        motion1.z -
-        motion2.current.x
-    );
+    // const change = Math.abs(
+    //   motion1.x -
+    //     motion2.current.x +
+    //     motion1.y -
+    //     motion2.current.x +
+    //     motion1.z -
+    //     motion2.current.x
+    // );
 
-    if (change > 80) {
-      setTimeout(() => {
-        if (currentTeam.id !== "end") {
-          setCount(count + 1);
-          tickTime();
+    // if (change > 80) {
+    //   setTimeout(() => {
+    //     if (currentTeam.id !== "end") {
+    //       setCount(count + 1);
+    //       tickTime();
+    //     }
+    //   }, 280);
+    // }
+    const hypot = Math.hypot(motion1.x, motion1.y, motion1.z);
+
+    if (hypot > 30) {
+      if (shaking) {
+        const [a, b, c] = normalize(motion1.x, motion1.y, motion1.z);
+        const [d, e, f] = normalize(shaking.x, shaking.y, shaking.z);
+        // check if [a,b,c] and [d,e,f] are pointing to the same direction by using dot product
+        if (Math.abs(a * d + b * e + c * f) < 0.3) {
+          shaking = undefined;
         }
-      }, 280);
+      }
+      if (!shaking) {
+        shaking = {
+          x: motion1.x,
+          y: motion1.y,
+          z: motion1.z,
+        };
+        setCount(count + 1);
+        tickTime();
+      }
+    } else if (hypot < 20) {
+      shaking = undefined;
     }
+
+    // document.querySelector("#debug")!.textContent = `${Math.round(max)}`;
 
     // Update new position
     motion2.current = {
@@ -78,6 +111,20 @@ const Vote = ({ userId }: { userId: string }) => {
       });
     }
   };
+
+  // useEffect(() => {
+  //   const shake = new Shake({});
+  //   shake.start();
+  //   window.addEventListener("shake", () => {
+  //     console.log("shake");
+
+  //     setCount(count + 1);
+  //     tickTime();
+  //   });
+  //   return () => {
+  //     shake.stop();
+  //   };
+  // }, []);
 
   const db = getFirestore(app);
 
