@@ -74,7 +74,7 @@ const creatorsgartenProvider: OAuthConfig<AuthgartenOidcClaims> = {
 
   // Add your Client ID to this URL to integrate with Authgarten:
   // https://github.com/creatorsgarten/creatorsgarten.org/blob/main/src/constants/oauth.ts
-  clientId: "https://github.com/StupidHackTH/event-currency-interface",
+  clientId: "https://github.com/StupidHackTH/sht7-vote",
 
   idToken: true,
   profile: (profile) => {

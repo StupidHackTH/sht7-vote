@@ -5,9 +5,22 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import type { GetServerSidePropsContext } from "next";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { data: session, status } = useSession();
+
+  const [motion, setMotion] = useState(0);
+
+  // useEffect(() => {
+  //   DeviceMotionEvent.requestPermission().then((response: any) => {
+  //     if (response == "granted") {
+  //       window.addEventListener("devicemotion", (e) => {
+  //         setMotion(event.acceleration.x);
+  //       });
+  //     }
+  //   });
+  // }, [motion]);
 
   if (!session) {
     return (
@@ -38,6 +51,7 @@ export default function Home() {
         <main>
           <Vote />
           status: {status}
+          {motion}
         </main>
       </>
     );
