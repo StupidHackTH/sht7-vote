@@ -29,6 +29,24 @@ export default function Home() {
       .catch(console.error);
   }, [motion]);
 
+  const handleRequestMotion = async () => {
+    if (typeof (DeviceMotionEvent as any).requestPermission === "function") {
+      (DeviceMotionEvent as any)
+        .requestPermission()
+        .then((permissionState: any) => {
+          if (permissionState === "granted") {
+            window.addEventListener("devicemotion", (e: any) => {
+              setMotion(e.accelerationIncludingGravity.x);
+            });
+          }
+        })
+        .catch(console.error);
+    } else {
+      // handle regular non iOS 13+ devices
+      console.log("asds");
+    }
+  };
+
   if (!session) {
     return (
       <>
@@ -44,6 +62,7 @@ export default function Home() {
           </Link>
           status: {status}
           motion: {motion}
+          <button onClick={handleRequestMotion}>Request Motion</button>
         </main>
       </>
     );
@@ -73,4 +92,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       session: await getServerSession(context.req, context.res, authOptions),
     },
   };
+}
+function then(arg0: (response: any) => void) {
+  throw new Error("Function not implemented.");
 }
