@@ -10,57 +10,6 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const { data: session, status } = useSession();
 
-  const [motion1, setMotion1] = useState({
-    x: 0,
-    y: 0,
-    z: 0,
-  });
-
-  const [motion2, setMotion2] = useState({
-    x: 0,
-    y: 0,
-    z: 0,
-  });
-
-  useEffect(() => {
-    setInterval(function () {
-      var change = Math.abs(
-        motion1.x - motion2.x + motion1.y - motion2.x + motion1.z - motion2.x
-      );
-
-      if (change > 25) {
-        alert("Shake!");
-      }
-
-      // Update new position
-      motion2.x = motion1.x;
-      motion2.y = motion1.y;
-      motion2.z = motion1.y;
-    }, 300);
-  }, []);
-
-  const handleRequestMotion = async () => {
-    if (typeof (DeviceMotionEvent as any).requestPermission === "function") {
-      (DeviceMotionEvent as any)
-        .requestPermission()
-        .then((permissionState: any) => {
-          if (permissionState === "granted") {
-            window.addEventListener("devicemotion", (e: any) => {
-              setMotion1({
-                x: e.accelerationIncludingGravity.x,
-                y: e.accelerationIncludingGravity.y,
-                z: e.accelerationIncludingGravity.z,
-              });
-            });
-          }
-        })
-        .catch(console.error);
-    } else {
-      // handle regular non iOS 13+ devices
-      console.log("Not Supported");
-    }
-  };
-
   if (!session) {
     return (
       <>
@@ -87,13 +36,7 @@ export default function Home() {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <main>
-          {session?.userId && <Vote userId={session?.userId} />}
-          status: {status}
-          motion1: {JSON.stringify(motion1)}
-          motion2: {JSON.stringify(motion2)}
-          <button onClick={handleRequestMotion}>Request Motion</button>
-        </main>
+        <main>{session?.userId && <Vote userId={session?.userId} />}</main>
       </>
     );
   }
@@ -106,7 +49,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       session: await getServerSession(context.req, context.res, authOptions),
     },
   };
-}
-function then(arg0: (response: any) => void) {
-  throw new Error("Function not implemented.");
 }
