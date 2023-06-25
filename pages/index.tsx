@@ -6,6 +6,7 @@ import type { GetServerSidePropsContext } from "next";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Login from "@/components/Login";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -20,10 +21,7 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <main>
-          <Link href="/api/auth/signin">
-            <button>sign in</button>
-          </Link>
-          status: {status}
+          <Login />
         </main>
       </>
     );
