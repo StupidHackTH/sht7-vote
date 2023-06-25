@@ -28,7 +28,7 @@ export default function Home() {
         motion1.x - motion2.x + motion1.y - motion2.x + motion1.z - motion2.x
       );
 
-      if (change > 20) {
+      if (change > 2000) {
         alert("Shake!");
       }
 
