@@ -196,7 +196,7 @@ const Vote = ({ userId }: { userId: string }) => {
       </div>
       <div className="flex flex-col justify-center items-center space-y-2">
         <h3 className="text-gray-700 text-sm font-medium">Shaking for Team</h3>
-        <div className="text-4xl font-bold">{currentTeam.name}</div>
+        <div className="text-4xl font-bold text-center">{currentTeam.name}</div>
       </div>
       <div className="text-center text-8xl font-bold">{count}</div>
       <div className="text-center text-gray-200">{time}</div>
