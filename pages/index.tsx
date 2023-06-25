@@ -6,7 +6,6 @@ import type { GetServerSidePropsContext } from "next";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
 export default function Home() {
   const { data: session, status } = useSession();
 
@@ -16,15 +15,15 @@ export default function Home() {
     console.log(session?.userId);
   }, [session]);
 
-  // useEffect(() => {
-  //   DeviceMotionEvent.requestPermission().then((response: any) => {
-  //     if (response == "granted") {
-  //       window.addEventListener("devicemotion", (e) => {
-  //         setMotion(event.acceleration.x);
-  //       });
-  //     }
-  //   });
-  // }, [motion]);
+  useEffect(() => {
+    DeviceMotionEvent.requestPermission().then((response: any) => {
+      if (response == "granted") {
+        window.addEventListener("devicemotion", (e: any) => {
+          setMotion(e.acceleration.x);
+        });
+      }
+    });
+  }, [motion]);
 
   if (!session) {
     return (
