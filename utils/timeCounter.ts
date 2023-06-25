@@ -30,6 +30,9 @@ export function collectTime() {
 }
 
 export function resetTime() {
+  if (currentSegment?.timer) {
+    clearTimeout(currentSegment.timer);
+  }
   totalTime = 0;
   currentSegment = undefined;
 }
