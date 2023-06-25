@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Login from "@/components/Login";
 import Personal from "@/components/Personal";
+import Header from "@/components/Header";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -15,12 +16,7 @@ export default function Home() {
   if (!session) {
     return (
       <>
-        <Head>
-          <title>sht7 vote</title>
-          <meta name="description" content="Vote your favourite team" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+        <Header />
         <main>
           <Login />
         </main>
@@ -29,12 +25,7 @@ export default function Home() {
   } else {
     return (
       <>
-        <Head>
-          <title>sht7 vote</title>
-          <meta name="description" content="Vote your favourite team" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+        <Header />
         <main>
           {session?.userId && (
             <>
