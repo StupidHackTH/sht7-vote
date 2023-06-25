@@ -79,8 +79,8 @@ const Team = () => {
       <div>Current team: {selectedTeam.name}</div>
 
       <div>
-        {teams.map((team: any) => (
-          <div>
+        {teams.map((team: any, index: number) => (
+          <div key={index}>
             <button
               className="p-4 bg-slate-600 w-full m-4 text-white text-lg"
               onClick={() => handleSelectTeam(team)}

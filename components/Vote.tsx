@@ -38,7 +38,7 @@ const Vote = () => {
     return () => {
       unsub();
     };
-  }, []);
+  }, [db]);
 
   useEffect(() => {
     const history = localStorage.getItem("history");
@@ -54,7 +54,7 @@ const Vote = () => {
     if (currentTeam.id === "end") {
       addDoc(collection(db, "results"), history);
     }
-  }, [currentTeam.id]);
+  }, [currentTeam.id, db, history]);
 
   return (
     <div>
