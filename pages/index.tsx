@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Login from "@/components/Login";
+import Personal from "@/components/Personal";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -34,7 +35,14 @@ export default function Home() {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <main>{session?.userId && <Vote userId={session?.userId} />}</main>
+        <main>
+          {session?.userId && (
+            <>
+              <Personal session={session} />
+              <Vote userId={session?.userId} />
+            </>
+          )}
+        </main>
       </>
     );
   }
