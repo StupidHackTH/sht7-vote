@@ -10,24 +10,34 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const { data: session, status } = useSession();
 
-  const [motion, setMotion] = useState(0);
+  const [motion1, setMotion1] = useState({
+    x: 0,
+    y: 0,
+    z: 0,
+  });
+
+  const [motion2, setMotion2] = useState({
+    x: 0,
+    y: 0,
+    z: 0,
+  });
 
   useEffect(() => {
-    console.log(session?.userId);
-  }, [session]);
+    setInterval(function () {
+      var change = Math.abs(
+        motion1.x - motion2.x + motion1.y - motion2.x + motion1.z - motion2.x
+      );
 
-  useEffect(() => {
-    (DeviceMotionEvent as any)
-      .requestPermission()
-      .then((response: any) => {
-        if (response == "granted") {
-          window.addEventListener("devicemotion", (e: any) => {
-            setMotion(e.accelerationIncludingGravity.x);
-          });
-        }
-      })
-      .catch(console.error);
-  }, [motion]);
+      if (change > 20) {
+        alert("Shake!");
+      }
+
+      // Update new position
+      motion2.x = motion1.x;
+      motion2.y = motion1.y;
+      motion2.z = motion1.y;
+    }, 150);
+  });
 
   const handleRequestMotion = async () => {
     if (typeof (DeviceMotionEvent as any).requestPermission === "function") {
@@ -36,14 +46,18 @@ export default function Home() {
         .then((permissionState: any) => {
           if (permissionState === "granted") {
             window.addEventListener("devicemotion", (e: any) => {
-              setMotion(e.accelerationIncludingGravity.x);
+              setMotion1({
+                x: e.accelerationIncludingGravity.x,
+                y: e.accelerationIncludingGravity.y,
+                z: e.accelerationIncludingGravity.z,
+              });
             });
           }
         })
         .catch(console.error);
     } else {
       // handle regular non iOS 13+ devices
-      console.log("asds");
+      console.log("Not Supported");
     }
   };
 
@@ -61,8 +75,6 @@ export default function Home() {
             <button>sign in</button>
           </Link>
           status: {status}
-          motion: {motion}
-          <button onClick={handleRequestMotion}>Request Motion</button>
         </main>
       </>
     );
@@ -78,7 +90,9 @@ export default function Home() {
         <main>
           {session?.userId && <Vote userId={session?.userId} />}
           status: {status}
-          motion: {motion}
+          motion1: {JSON.stringify(motion1)}
+          motion2: {JSON.stringify(motion2)}
+          <button onClick={handleRequestMotion}>Request Motion</button>
         </main>
       </>
     );
