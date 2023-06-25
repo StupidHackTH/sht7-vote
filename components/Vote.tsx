@@ -130,10 +130,20 @@ const Vote = ({ userId }: { userId: string }) => {
   }, [currentTeam.id, db]);
 
   return (
-    <div>
-      <div>Now you vote for : {currentTeam.name}</div>
-      <div>You clicked : {count}</div>
-      <button onClick={handleRequestMotion}>Request Permission</button>
+    <div className="p-8 space-y-8">
+      <div className="text-center">
+        <button
+          onClick={handleRequestMotion}
+          className="bg-red-500 text-white py-2 px-8 rounded-lg hover:brightness-90"
+        >
+          กดกูวววววววววว
+        </button>
+      </div>
+      <div className="flex flex-col justify-center items-center space-y-2">
+        <h3 className="text-gray-700 text-sm font-medium">Shaking for Team</h3>
+        <div className="text-4xl font-bold">{currentTeam.name}</div>
+      </div>
+      <div className="text-center text-8xl font-bold">{count}</div>
     </div>
   );
 };
