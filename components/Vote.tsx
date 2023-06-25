@@ -1,7 +1,7 @@
 import { app } from "@/utils/firebase";
 import { collectTime, tickTime } from "@/utils/timeCounter";
 import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Vote = ({ userId }: { userId: string }) => {
   const [motion1, setMotion1] = useState({
@@ -10,7 +10,7 @@ const Vote = ({ userId }: { userId: string }) => {
     z: 0,
   });
 
-  const [motion2, setMotion2] = useState({
+  const motion2 = useRef({
     x: 0,
     y: 0,
     z: 0,
@@ -19,8 +19,13 @@ const Vote = ({ userId }: { userId: string }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    var change = Math.abs(
-      motion1.x - motion2.x + motion1.y - motion2.x + motion1.z - motion2.x
+    const change = Math.abs(
+      motion1.x -
+        motion2.current.x +
+        motion1.y -
+        motion2.current.x +
+        motion1.z -
+        motion2.current.x
     );
 
     if (change > 100) {
@@ -33,12 +38,12 @@ const Vote = ({ userId }: { userId: string }) => {
     }
 
     // Update new position
-    setMotion2({
+    motion2.current = {
       x: motion1.x,
       y: motion1.y,
       z: motion1.z,
-    });
-  }, [motion1, motion2]);
+    };
+  }, [motion1, motion2.current]);
 
   const handleRequestMotion = async () => {
     if (typeof (DeviceMotionEvent as any).requestPermission === "function") {
