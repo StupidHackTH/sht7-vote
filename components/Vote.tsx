@@ -1,6 +1,6 @@
 import { app } from "@/utils/firebase";
 import { getMobileOperatingSystem } from "@/utils/getMobileOperatingSystem";
-import { collectTime, resetTime, tickTime } from "@/utils/timeCounter";
+import { peekTime, resetTime, tickTime } from "@/utils/timeCounter";
 import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 
@@ -25,6 +25,7 @@ const Vote = ({ userId }: { userId: string }) => {
   });
 
   const [count, setCount] = useState(0);
+  const [time, setTime] = useState(0);
 
   useEffect(() => {
     // const change = Math.abs(
@@ -63,6 +64,7 @@ const Vote = ({ userId }: { userId: string }) => {
         };
         setCount(count + 1);
         tickTime();
+        setTime(Math.round(peekTime()));
       }
     } else if (hypot < 20) {
       shaking = undefined;
@@ -77,6 +79,15 @@ const Vote = ({ userId }: { userId: string }) => {
       z: motion1.z,
     };
   }, [motion1, motion2.current]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(Math.round(peekTime()));
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleRequestMotion = async () => {
     const mobile = getMobileOperatingSystem();
@@ -158,8 +169,6 @@ const Vote = ({ userId }: { userId: string }) => {
     if (count == 0) return;
 
     if (currentTeam.id !== "end") {
-      const time = collectTime();
-      console.log(currentTeam.id, count, time);
       setDoc(
         doc(db, "results", userId),
         {
@@ -190,6 +199,7 @@ const Vote = ({ userId }: { userId: string }) => {
         <div className="text-4xl font-bold">{currentTeam.name}</div>
       </div>
       <div className="text-center text-8xl font-bold">{count}</div>
+      <div className="text-center text-gray-200">{time}</div>
     </div>
   );
 };
