@@ -36,7 +36,7 @@ export default function Home() {
       motion2.x = motion1.x;
       motion2.y = motion1.y;
       motion2.z = motion1.y;
-    }, 150);
+    }, 300);
   });
 
   const handleRequestMotion = async () => {
