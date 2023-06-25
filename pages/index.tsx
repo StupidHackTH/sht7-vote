@@ -16,7 +16,7 @@ export default function Home() {
   }, [session]);
 
   useEffect(() => {
-    DeviceMotionEvent.requestPermission().then((response: any) => {
+    (DeviceMotionEvent as any).requestPermission().then((response: any) => {
       if (response == "granted") {
         window.addEventListener("devicemotion", (e: any) => {
           setMotion(e.acceleration.x);
@@ -39,6 +39,7 @@ export default function Home() {
             <button>sign in</button>
           </Link>
           status: {status}
+          motion: {motion}
         </main>
       </>
     );
